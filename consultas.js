@@ -18,6 +18,29 @@ const addPosts = async (titulo, img, descripcion) => {
   const values = [titulo, img, descripcion];
   const result = await pool.query(consulta, values);
   console.log("Post created");
+  return result.rows;
 };
 
-module.exports = { getPosts, addPosts };
+const modifyPosts = async (id, titulo, img, descripcion, likes) => {
+  const consulta =
+    "UPDATE posts SET titulo = $2, img = $3, descripcion = $4, likes = $5 WHERE id = $1";
+  const values = [id, titulo, img, descripcion, likes];
+  const result = await pool.query(consulta, values);
+  console.log("Post modified");
+};
+
+const likePost = async (id) => {
+  const consulta = "UPDATE posts SET likes = likes + 1 WHERE id = $1";
+  const values = [id];
+  const result = await pool.query(consulta, values);
+  return result.rows;
+};
+
+const deletePosts = async (id) => {
+  const consulta = "DELETE FROM posts WHERE id = $1 ";
+  const values = [id];
+  const result = await pool.query(consulta, values);
+  console.log("Post deleted");
+};
+
+module.exports = { getPosts, addPosts, modifyPosts, deletePosts, likePost };
